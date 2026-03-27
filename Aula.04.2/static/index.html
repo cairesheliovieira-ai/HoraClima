@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StoreMaster v2 — Gerenciador de Loja Premium</title>
+  <meta name="description" content="Sistema premium de gerenciamento de loja com JWT, analytics e controle de estoque." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-bg">
+    <div class="orb orb-a"></div><div class="orb orb-b"></div><div class="orb orb-c"></div>
+  </div>
+  <div class="login-card" role="main">
+    <div class="login-logo">
+      <div class="logo-mark">🛒</div>
+      <h1>StoreMaster</h1>
+      <p id="login-tagline" class="login-tagline"></p>
+    </div>
+    <form id="login-form" novalidate>
+      <div class="field">
+        <label for="login-username">Usuário</label>
+        <div class="input-box"><span class="input-ico">👤</span>
+          <input id="login-username" type="text" placeholder="seu.usuario" required />
+        </div>
+      </div>
+      <div class="field">
+        <label for="login-password">Senha</label>
+        <div class="input-box"><span class="input-ico">🔑</span>
+          <input id="login-password" type="password" placeholder="••••••••" required />
+        </div>
+      </div>
+      <p id="login-error" class="error-msg hidden" role="alert"></p>
+      <button id="login-btn" type="submit" class="btn btn-primary btn-full">
+        <span id="login-btn-text">Entrar no sistema</span>
+        <span id="login-spinner" class="spinner hidden"></span>
+      </button>
+    </form>
+    <p class="login-hint">Demo: <strong>admin</strong> / <strong>admin123</strong></p>
+  </div>
+</div>
+
+<!-- APP SHELL -->
+<div id="app" hidden>
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div class="sb-top">
+      <span class="sb-ico">🛒</span>
+      <div><span class="sb-brand">StoreMaster</span><span class="sb-ver">v2.0</span></div>
+    </div>
+    <nav class="sb-nav">
+      <button class="sb-item active" data-page="dashboard">
+        <span class="sb-ni">📊</span><span>Dashboard</span><span class="sb-dot"></span>
+      </button>
+      <button class="sb-item" data-page="products">
+        <span class="sb-ni">📦</span><span>Produtos</span><span class="sb-dot"></span>
+      </button>
+      <button class="sb-item" data-page="sales">
+        <span class="sb-ni">💳</span><span>Vendas</span><span class="sb-dot"></span>
+      </button>
+    </nav>
+    <div class="sb-foot">
+      <div class="sb-user">
+        <div class="sb-av" id="sb-avatar">A</div>
+        <div><span id="sb-name" class="sb-uname">—</span><span id="sb-role" class="sb-role">—</span></div>
+      </div>
+      <button id="btn-logout" class="btn-logout" title="Sair">⏏</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-wrap">
+    <header id="app-header">
+      <div><h2 id="header-title">Dashboard</h2><p id="header-sub" class="header-sub">Visão geral</p></div>
+      <div class="header-right">
+        <span id="header-time" class="htime"></span>
+        <button id="btn-header-action" class="btn btn-primary btn-sm hidden"></button>
+      </div>
+    </header>
+
+    <main id="content">
+
+      <!-- DASHBOARD -->
+      <section id="page-dashboard" class="page active">
+        <div class="kpi-grid">
+          <div class="kpi-card kpi-blue"><div class="kpi-glow"></div>
+            <span class="kpi-ico">💰</span>
+            <div class="kpi-body"><span class="kpi-lbl">Receita Total</span><span class="kpi-val" id="val-revenue">—</span><span class="kpi-sub">Todas as vendas</span></div>
+          </div>
+          <div class="kpi-card kpi-green"><div class="kpi-glow"></div>
+            <span class="kpi-ico">📈</span>
+            <div class="kpi-body"><span class="kpi-lbl">Lucro Bruto</span><span class="kpi-val" id="val-profit">—</span><span class="kpi-sub">Receita − Custo</span></div>
+          </div>
+          <div class="kpi-card kpi-violet"><div class="kpi-glow"></div>
+            <span class="kpi-ico">🧾</span>
+            <div class="kpi-body"><span class="kpi-lbl">Vendas</span><span class="kpi-val" id="val-sales">—</span><span class="kpi-sub">Transações concluídas</span></div>
+          </div>
+          <div class="kpi-card kpi-cyan"><div class="kpi-glow"></div>
+            <span class="kpi-ico">📦</span>
+            <div class="kpi-body"><span class="kpi-lbl">Produtos</span><span class="kpi-val" id="val-products">—</span><span class="kpi-sub">No catálogo</span></div>
+          </div>
+        </div>
+
+        <div class="charts-row">
+          <div class="chart-card chart-main">
+            <div class="cc-hdr"><div><h3>Receita — Últimos 7 Dias</h3><p class="cc-sub">Performance semanal</p></div></div>
+            <div class="chart-wrap"><canvas id="chart-weekly"></canvas></div>
+          </div>
+          <div class="chart-card chart-side">
+            <div class="cc-hdr"><div><h3>Por Categoria</h3><p class="cc-sub">Distribuição de receita</p></div></div>
+            <div class="chart-wrap chart-donut"><canvas id="chart-categories"></canvas></div>
+            <p id="chart-cat-empty" class="chart-empty hidden">Sem vendas ainda</p>
+          </div>
+        </div>
+
+        <div class="db-bottom">
+          <div class="db-card">
+            <div class="db-hdr"><h3>🧾 Vendas Recentes</h3><button class="link-btn" data-page="sales">Ver todas →</button></div>
+            <div id="recent-list"></div>
+          </div>
+          <div class="db-card">
+            <div class="db-hdr"><h3>⚠️ Estoque Crítico</h3><button class="link-btn" data-page="products">Gerenciar →</button></div>
+            <div id="low-stock-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRODUTOS -->
+      <section id="page-products" class="page">
+        <div class="toolbar">
+          <div class="tb-left">
+            <div class="sbox"><span>🔍</span><input id="product-search" type="search" placeholder="Buscar produto..." /></div>
+            <div id="cat-tabs" class="cat-tabs"></div>
+          </div>
+          <div class="tb-right">
+            <div class="view-toggle">
+              <button id="btn-grid" class="vbtn active" title="Grid">⊞</button>
+              <button id="btn-list" class="vbtn" title="Lista">☰</button>
+            </div>
+            <button id="btn-new-product" class="btn btn-primary btn-sm">＋ Produto</button>
+          </div>
+        </div>
+        <div id="products-container"></div>
+      </section>
+
+      <!-- VENDAS -->
+      <section id="page-sales" class="page">
+        <div class="sales-bar">
+          <div class="sb-stat"><span class="sb-lbl">Vendas Hoje</span><span id="stat-today" class="sb-val">—</span></div>
+          <div class="sb-div"></div>
+          <div class="sb-stat"><span class="sb-lbl">Receita Hoje</span><span id="stat-rev-today" class="sb-val">—</span></div>
+          <div class="sb-div"></div>
+          <div class="sb-stat"><span class="sb-lbl">Receita Total</span><span id="stat-total" class="sb-val">—</span></div>
+        </div>
+        <div class="table-card">
+          <div class="tc-hdr"><h3>Histórico de Vendas</h3><button id="btn-new-sale" class="btn btn-primary btn-sm">⚡ Nova Venda</button></div>
+          <div class="tbl-scroll">
+            <table class="dtable">
+              <thead><tr><th>#</th><th>Produto</th><th>Qtd</th><th>Unit.</th><th>Total</th><th>Lucro</th><th>Vendedor</th><th>Data</th></tr></thead>
+              <tbody id="sales-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- MODAL PRODUTO -->
+<div id="modal-product" class="mbk hidden" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="mhdr"><h3 id="mp-title">Produto</h3><button class="mx" data-close="modal-product">✕</button></div>
+    <form id="product-form" novalidate>
+      <input type="hidden" id="pf-id" />
+      <div class="field"><label for="pf-name">Nome *</label><input id="pf-name" type="text" placeholder="Nome do produto" required /></div>
+      <div class="field-row">
+        <div class="field"><label for="pf-price">Preço Venda (R$) *</label><input id="pf-price" type="number" step="0.01" min="0" placeholder="0,00" required /></div>
+        <div class="field"><label for="pf-cost">Custo (R$)</label><input id="pf-cost" type="number" step="0.01" min="0" placeholder="0,00" /></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="pf-stock">Estoque Atual</label><input id="pf-stock" type="number" min="0" placeholder="0" /></div>
+        <div class="field"><label for="pf-minstk">Estoque Mínimo</label><input id="pf-minstk" type="number" min="0" placeholder="5" /></div>
+      </div>
+      <div class="field"><label for="pf-cat">Categoria</label><select id="pf-cat"></select></div>
+      <div id="pf-margin" class="margin-prev hidden"><span>Margem de lucro:</span><strong id="pf-margin-val">—</strong></div>
+      <p id="pf-error" class="error-msg hidden"></p>
+      <div class="mftr"><button type="button" class="btn btn-ghost" data-close="modal-product">Cancelar</button><button type="submit" id="btn-save-product" class="btn btn-primary">Salvar</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL VENDA -->
+<div id="modal-sale" class="mbk hidden" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="mhdr"><h3>⚡ Nova Venda</h3><button class="mx" data-close="modal-sale">✕</button></div>
+    <form id="sale-form" novalidate>
+      <div class="field"><label for="sf-product">Produto *</label><select id="sf-product" required></select></div>
+      <div class="field"><label for="sf-qty">Quantidade *</label><input id="sf-qty" type="number" min="1" value="1" required /></div>
+      <div id="sf-preview" class="sale-prev hidden">
+        <div class="spr"><span>Preço unit.</span><span id="sp-unit">—</span></div>
+        <div class="spr"><span>Estoque disp.</span><span id="sp-stock">—</span></div>
+        <div class="spr spr-total"><span>Total</span><strong id="sp-total">R$ 0,00</strong></div>
+        <div class="spr"><span>Lucro est.</span><span id="sp-profit" class="text-green">R$ 0,00</span></div>
+      </div>
+      <p id="sf-error" class="error-msg hidden"></p>
+      <div class="mftr"><button type="button" class="btn btn-ghost" data-close="modal-sale">Cancelar</button><button type="submit" id="btn-save-sale" class="btn btn-success">Confirmar Venda</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL CONFIRM -->
+<div id="modal-confirm" class="mbk hidden" role="dialog" aria-modal="true">
+  <div class="modal modal-sm">
+    <div class="mhdr"><h3>Confirmar Exclusão</h3><button class="mx" data-close="modal-confirm">✕</button></div>
+    <p id="confirm-msg" class="confirm-msg"></p>
+    <div class="mftr"><button type="button" class="btn btn-ghost" data-close="modal-confirm">Cancelar</button><button id="btn-confirm-ok" class="btn btn-danger">Excluir</button></div>
+  </div>
+</div>
+
+<div id="toast-container" aria-live="polite"></div>
+<div id="confetti-layer"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

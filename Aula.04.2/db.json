@@ -1,0 +1,80 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "$2b$12$r23xc9s5/gwFAW5sH3SHbO42ywr.sA4eZuGatIcnAHdEFqLQzf/Gu",
+      "role": "admin",
+      "name": "Administrador"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Notebook Dell",
+      "price": 3500.0,
+      "stock": 9,
+      "category": "Eletrônicos"
+    },
+    {
+      "id": 2,
+      "name": "Mouse Logitech",
+      "price": 89.9,
+      "stock": 42,
+      "category": "Periféricos"
+    },
+    {
+      "id": 3,
+      "name": "Teclado Mecânico",
+      "price": 249.0,
+      "stock": 0,
+      "category": "Periféricos"
+    },
+    {
+      "id": 4,
+      "name": "Monitor 24\"",
+      "price": 1190.0,
+      "stock": 10,
+      "category": "Eletrônicos"
+    },
+    {
+      "id": 5,
+      "name": "Cadeira Gamer",
+      "price": 799.0,
+      "stock": 5,
+      "category": "Móveis"
+    }
+  ],
+  "sales": [
+    {
+      "id": 1,
+      "product_id": 1,
+      "product_name": "Notebook Dell",
+      "quantity": 1,
+      "unit_price": 3500.0,
+      "total": 3500.0,
+      "sold_by": "admin",
+      "date": "2026-03-27T12:19:42.263194"
+    },
+    {
+      "id": 2,
+      "product_id": 3,
+      "product_name": "Teclado Mecânico",
+      "quantity": 28,
+      "unit_price": 249.0,
+      "total": 6972.0,
+      "sold_by": "admin",
+      "date": "2026-03-27T12:20:16.780930"
+    },
+    {
+      "id": 3,
+      "product_id": 1,
+      "product_name": "Notebook Dell",
+      "quantity": 5,
+      "unit_price": 3500.0,
+      "total": 17500.0,
+      "sold_by": "admin",
+      "date": "2026-03-27T12:22:24.636284"
+    }
+  ]
+}
